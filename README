@@ -1,0 +1,7 @@
+### Subsets
+21 - lead-like
+23 - drug-like
+
+
+## Download Zinc files from a subset list (i.e. 21_t70.smi)
+awk '{print "perl ZINC_downloadAndFile.pl -zinc_library ../Zinc-Library/ -id "$2}' Subsets/20090701.21_t60.smi | head | sh
