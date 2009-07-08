@@ -44,8 +44,6 @@ GetOptions(
 die("\n$USAGE\n") if $HELP;
 die("$ZINC_LIBRARY doesn't exist") if !-e $ZINC_LIBRARY;
 
-print "ZINC MOLECULE: $ID\n";
-
 #############################################################
 # Set the path
 #############################################################
@@ -53,18 +51,19 @@ $subdir=substr($ID,4,2);
 $subsubdir=substr($ID,6,2);
 $subsubsubdir=substr($ID,8,2);
 $fullPath = "$ZINC_LIBRARY/$subdir/$subsubdir/$subsubsubdir/";
-print "Path: $fullPath\n";
+print "ZINC MOLECULE:\t$ID\n";
+print "PATH:\t\t$fullPath\n";
 
 #############################################################
 # Quick Test and Force
 #############################################################
-my @molecules = glob("$fullPath/$id*mol2");
+my @molecules = glob("$fullPath/$ID*mol2");
 if(scalar @molecules>0) {
     print "These molecules are already in library:\n";
     foreach (@molecules) {print "\t".$_."\n";}
     if($FORCE) {
-	print "FORCE: removing all $id*mol2 files and replacing thme\n";
-	`rm $fullPath/$id*mol2`;
+	print "FORCE: removing all $ID*mol2 files and replacing thme\n";
+	`rm $fullPath/$ID*mol2`;
     } else {
 	exit 0;
     }
