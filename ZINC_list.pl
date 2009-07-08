@@ -27,13 +27,18 @@ use File::Spec;
 use File::Compare;
 use POSIX;
 
+$USAGE="perl ZINC_list -library __path__ [-verbose]\n";
 GetOptions(
-    "zinc_library=s" => \$ZINC_LIBRARY,
-    "verbose!"      => \$VERBOSE,
-    "list=s"         => \$LIST,
-    "force!"         => \$FORCE,
-    "h!"             => \$HELP
+    "library=s" => \$ZINC_LIBRARY,
+    "verbose!"  => \$VERBOSE,
+    "force!"    => \$FORCE,
+    "h!"        => \$HELP
     );
+die($USAGE) if $HELP;
+
+##############################################################
+#
+##############################################################
 my $individualCount=0;
 my %seen=();
 
@@ -48,12 +53,20 @@ foreach $dir1 (glob("$ZINC_LIBRARY/*")) {
 		$fileName=basename($file);
 		$count++;
 		$seen{$fileName}++;
-		print ++$individualCount." ".$seen{$fileName}." $file\n";
+		print ++$individualCount." ".$seen{$fileName}." $file\n" if $VERBOSE;
 	    }
 	    $totalCount+=$count;
 	}
     }
-    printf(">>> $dir3:%6d Running Total: %10d\n",
-	   $count,$totalCount);
+    printf(">>> $dir3:%6d Running Total: %10d\n",$count,$totalCount) if $VERBOSE;
 }
 print "Total total: $totalCount\n";
+
+##############################################################
+# Rsync Zinc-Library
+##############################################################
+my $destinationPath="/home/abinkows/Zinc/";
+my $localPath="/Volumes/Alpha/Zinc/Zinc-Library";
+my $arguments="-avz --delete";
+print "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
+print "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";

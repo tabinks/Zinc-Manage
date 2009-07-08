@@ -51,6 +51,7 @@ $subdir=substr($ID,4,2);
 $subsubdir=substr($ID,6,2);
 $subsubsubdir=substr($ID,8,2);
 $fullPath = "$ZINC_LIBRARY/$subdir/$subsubdir/$subsubsubdir/";
+print "----------------------------------------------------\n";
 print "ZINC MOLECULE:\t$ID\n";
 print "PATH:\t\t$fullPath\n";
 
