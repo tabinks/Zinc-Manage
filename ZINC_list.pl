@@ -29,12 +29,13 @@ use POSIX;
 
 $USAGE="perl ZINC_list -library __path__ [-verbose]\n";
 GetOptions(
-    "library=s" => \$ZINC_LIBRARY,
+    "library=s" => \$ALT_LIBRARY,
     "verbose!"  => \$VERBOSE,
     "force!"    => \$FORCE,
     "h!"        => \$HELP
     );
 die($USAGE) if $HELP;
+$ZINC_LIBRARY=($ALT_LIBRARY) ? $ALT_LIBRARY : "/home/abinkows/Zinc/Zinc-Library";
 
 ##############################################################
 #

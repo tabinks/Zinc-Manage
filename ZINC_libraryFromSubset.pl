@@ -16,7 +16,7 @@ my %options=();
 GetOptions("subset=s"  => \$SUBSET,
 	   "prefix=s"   => \$PREFIX,
 	   "h!"         => \$HELP,
-	   "library=s" =>\$ZINC_LIBRARY,
+	   "library=s" =>\$ALT_LIBRARY,
 	   "usual_only!" => \$USUAL_ONLY);
 
 my $SYSTEM = $ENV{'PS1'};
@@ -26,6 +26,7 @@ my $USER  = `whoami`;chomp($USER);
 my $DATE  = `date +%Y%m%d`;chomp($DATE);
 #my $DESCRIPTION = $PREFIX."_".$PROTEIN."_".basename($LIBRARY);
 
+$ZINC_LIBRARY = ($ALT_LIBRARY) ? $ALT_LIBRARY : "/home/abinkows/Zinc/Zinc-Library/";
 die("ZINC_LIBRARY not found") if !-e $ZINC_LIBRARY;
 
 ################################################################
@@ -38,7 +39,7 @@ $ZINC_LIBRARY = File::Spec->rel2abs($ZINC_LIBRARY);
 
 
 open(OUT,">$DB_PATH") or die("Couldn't open $DB_PATH");
-open(MISSING,">$MISSING_PATH") or die("Couldn't open $MISSING_PATH");
+#open(MISSING,">$MISSING_PATH") or die("Couldn't open $MISSING_PATH");
 
 open(SUBSET,"<$SUBSET") or die("Couldn't open $SUBSET");
 while(<SUBSET>) {
@@ -53,16 +54,16 @@ while(<SUBSET>) {
 	$level=$1;
 	$count=$2;
 	next if $USUAL_ONLY && $level==0;
-	print "$level $count - $_\n";;
-	if (-e $_) {
+	#print "$level $count - $_\n";;
+	#if (-e $_) {
 	    print OUT "$_ $smiles\n";
-	} else {
-	    print MISSING "$_ $smiles\n";
-	}
+	#} else {
+	#    print MISSING "$_ $smiles\n";
+	#}
     }
     print "." if ($count++%100==0);
 }
 
 close SUBSET;
-close MISSING;
+#close MISSING;
 close OUT;
