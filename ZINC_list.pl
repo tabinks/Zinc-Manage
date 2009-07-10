@@ -32,10 +32,22 @@ GetOptions(
     "library=s" => \$ALT_LIBRARY,
     "verbose!"  => \$VERBOSE,
     "force!"    => \$FORCE,
-    "h!"        => \$HELP
+    "h!"        => \$HELP,
+    "rsync!"    => \$RSYNC
     );
+
 die($USAGE) if $HELP;
 $ZINC_LIBRARY=($ALT_LIBRARY) ? $ALT_LIBRARY : "/home/abinkows/Zinc/Zinc-Library";
+
+##############################################################
+# Rsync Zinc-Library
+##############################################################
+my $destinationPath="/home/abinkows/Zinc/";
+my $localPath="/Volumes/Alpha/Zinc/Zinc-Library";
+my $arguments="-avz --delete";
+print "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
+print "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";
+exit(1) if $RSYNC;
 
 ##############################################################
 #
@@ -63,11 +75,3 @@ foreach $dir1 (glob("$ZINC_LIBRARY/*")) {
 }
 print "Total total: $totalCount\n";
 
-##############################################################
-# Rsync Zinc-Library
-##############################################################
-my $destinationPath="/home/abinkows/Zinc/";
-my $localPath="/Volumes/Alpha/Zinc/Zinc-Library";
-my $arguments="-avz --delete";
-print "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
-print "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";
