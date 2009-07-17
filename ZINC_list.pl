@@ -27,7 +27,9 @@ use File::Spec;
 use File::Compare;
 use POSIX;
 
-$USAGE="perl ZINC_list -library __path__ [-verbose]\n";
+##############################################################
+#
+##############################################################
 GetOptions(
     "library=s" => \$ALT_LIBRARY,
     "verbose!"  => \$VERBOSE,
@@ -36,8 +38,18 @@ GetOptions(
     "rsync!"    => \$RSYNC
     );
 
+my $USAGE="perl ZINC_list -library /home/abinkows/Zinc/Zinc-Library [-verbose]\n";
 die($USAGE) if $HELP;
 $ZINC_LIBRARY=($ALT_LIBRARY) ? $ALT_LIBRARY : "/home/abinkows/Zinc/Zinc-Library";
+
+##############################################################
+# Local Variables
+##############################################################
+my $DATE  = `date +%Y%m%d-%H:%m`;chomp($DATE);
+my $individualCount=0;
+my %seen=();
+my $OUTFILE=$ZINC_LIBRARRY."-$DATE.list";
+open(OUT,"<$OUTFILE") or die("Couldn't open $OUTFILE:$!");
 
 ##############################################################
 # Rsync Zinc-Library
@@ -45,22 +57,19 @@ $ZINC_LIBRARY=($ALT_LIBRARY) ? $ALT_LIBRARY : "/home/abinkows/Zinc/Zinc-Library"
 my $destinationPath="/home/abinkows/Zinc/";
 my $localPath="/Volumes/Alpha/Zinc/Zinc-Library";
 my $arguments="-avz --delete";
-print "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
-print "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";
+print OUT "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
+print OUT "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";
 exit(1) if $RSYNC;
 
 ##############################################################
 #
 ##############################################################
-my $individualCount=0;
-my %seen=();
-
 foreach $dir1 (glob("$ZINC_LIBRARY/*")) {
-    print "$dir1\n" if $VERBOSE;
+    print OUT "$dir1\n" if $VERBOSE;
     foreach $dir2 (glob("$dir1/*")) {
-	print "$dir2\n" if $VERBOSE;
+	print OUT "$dir2\n" if $VERBOSE;
 	foreach $dir3 (glob("$dir2/*")) {
-	    print "$dir3\n"  if $VERBOSE;
+	    print OUT "$dir3\n"  if $VERBOSE;
 	    $count=0;
 	    foreach $file (glob("$dir3/*mol2")) {
 		$fileName=basename($file);
@@ -73,5 +82,7 @@ foreach $dir1 (glob("$ZINC_LIBRARY/*")) {
     }
     printf(">>> $dir3:%6d Running Total: %10d\n",$count,$totalCount) if $VERBOSE;
 }
-print "Total total: $totalCount\n";
+print OUT "Total total: $totalCount\n";
+
+close OUT;
 
