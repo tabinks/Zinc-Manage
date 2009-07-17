@@ -43,6 +43,16 @@ die($USAGE) if $HELP;
 $ZINC_LIBRARY=($ALT_LIBRARY) ? $ALT_LIBRARY : "/home/abinkows/Zinc/Zinc-Library";
 
 ##############################################################
+# Rsync Zinc-Library
+##############################################################
+my $destinationPath="/home/abinkows/Zinc/";
+my $localPath="/Volumes/Alpha/Zinc/Zinc-Library";
+my $arguments="-avz --delete";
+print STDERR "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
+print STDERR "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";
+exit(1) if $RSYNC;
+
+##############################################################
 # Local Variables
 ##############################################################
 my $DATE  = `date +%Y%m%d-%H:%m`;chomp($DATE);
@@ -51,15 +61,6 @@ my %seen=();
 my $OUTFILE=$ZINC_LIBRARRY."-$DATE.list";
 open(OUT,"<$OUTFILE") or die("Couldn't open $OUTFILE:$!");
 
-##############################################################
-# Rsync Zinc-Library
-##############################################################
-my $destinationPath="/home/abinkows/Zinc/";
-my $localPath="/Volumes/Alpha/Zinc/Zinc-Library";
-my $arguments="-avz --delete";
-print OUT "rsync $arguments $localPath abinkows\@login6.surveyor.alcf.anl.gov:$destinationPath\n";
-print OUT "rsync $arguments $localPath abinkows\@login6.intrepid.alcf.anl.gov:$destinationPath\n";
-exit(1) if $RSYNC;
 
 ##############################################################
 #
