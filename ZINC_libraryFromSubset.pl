@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 #################################################################
+# ZINC_libraryFromSubset.pl
 # 
-#
-# File should be in format: smiles id
-#
+# Description: File should be in format: smiles id\n
 #################################################################
 use File::Path;
 use File::Basename;
@@ -17,7 +16,10 @@ GetOptions("subset=s"  => \$SUBSET,
 	   "prefix=s"   => \$PREFIX,
 	   "h!"         => \$HELP,
 	   "library=s" =>\$ALT_LIBRARY,
+	   "verbose!"  =>\$VERBOSE,
 	   "usual_only!" => \$USUAL_ONLY);
+
+my $USAGE = $0." -subset Subsets/23_t60.20090707.smi -prefix 23_t60 -library /Volumes/Alpha/Zinc/Zinc-Library/\n";
 
 my $SYSTEM = $ENV{'PS1'};
 $SYSTEM=~s/\\[a-z]|[:@\.>]//g;
@@ -36,8 +38,6 @@ my $DB_PATH = $PREFIX.".$DATE.db";
 my $MISSING_PATH = $PREFIX.".$DATE.missing";
 $ZINC_LIBRARY = File::Spec->rel2abs($ZINC_LIBRARY);
 
-
-
 open(OUT,">$DB_PATH") or die("Couldn't open $DB_PATH");
 #open(MISSING,">$MISSING_PATH") or die("Couldn't open $MISSING_PATH");
 
@@ -48,6 +48,7 @@ while(<SUBSET>) {
     $subdir=substr($id,4,2);
     $subsubdir=substr($id,6,2);
     $subsubsubdir=substr($id,8,2);
+    print "$id $smiles\n" if $VERBOSE;
     
     foreach(glob("$ZINC_LIBRARY/$subdir/$subsubdir/$subsubsubdir/$id.*-*.mol2")) {
 	$_=~/$id.(\d)\-(\d).mol2/;
@@ -56,7 +57,7 @@ while(<SUBSET>) {
 	next if $USUAL_ONLY && $level==0;
 	#print "$level $count - $_\n";;
 	#if (-e $_) {
-	    print OUT "$_ $smiles\n";
+	print OUT "$_ $smiles\n";
 	#} else {
 	#    print MISSING "$_ $smiles\n";
 	#}
